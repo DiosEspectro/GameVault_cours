@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head th:replace="fragments/head::headfragment"></head>
+<body>
+<nav th:replace="fragments/navbar::navbarfragment"></nav>
+<div class="container py-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <a class="link" th:href="@{/games}">← Вернуться к списку игр</a>
+      <br/>
+      <div class="card shadow-lg mt-3">
+        <div class="card-header">
+          <span class="badge alert-success mb-3" th:text="${game.getGenre()}"></span><br>
+          <h2 class="text-left text-name" th:text="${game.getGameName()}"></h2>
+          <h5 class="text-left text-secondary" th:text="${game.getGameDeveloper()}"></h5>
+          <h6 class="text-left" th:text="${game.getGameYear()}"></h6>
+        </div>
+        <div class="card-body">
+          <div class="row col-md-10">
+            <h5>Купленные копии игр</h5>
+          </div>
+          <table class="table table-sm table-striped" id="detailsTable">
+            <thead>
+            <tr>
+              <th>Платформа</th>
+              <th>Магазин</th>
+              <th>Стоимость, ₽</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="align-middle" th:each="gameDetail: ${gameDetails}">
+              <td th:text="${gameDetail.getPlatform().getName()}" />
+              <td th:text="${gameDetail.getStore().getName()}" />
+              <td th:text="${gameDetail.getPrice()}" />
+              <td style="padding-left: 50px;">
+                <a sec:authorize="!hasAuthority('READONLY')" th:href="@{/gameDetails/deleteDetail(gameId=${game.gameId}, detailId=${gameDetail.detailId})}" class="btn btn-secondary ml-2" title="Удалить запись"><i class="bi bi-x-lg text-light"></i></a>
+              </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(gameDetails)}">
+              <td class="text-center p-4" colspan="5">Пока не введено данных</td>
+            </tr>
+            </tbody>
+          </table>
+          <script type="text/javascript">function addDetail(isOpen){$('div.addDetail').slideToggle("fast",function(){});}</script>
+          <div sec:authorize="!hasAuthority('READONLY')" class="addDetail">
+            <a href="javascript:addDetail(true)" class="btn btn-primary"><i class="bi bi-plus-lg text-light"></i>&nbsp;Добавить копию</a>
+          </div>
+            <div sec:authorize="!hasAuthority('READONLY')" class="card-body bg-light mt-1 addDetail" style="display: none;">
+              <div class="row col-md-10">
+                <h5>Добавить копию</h5>
+              </div>
+              <form th:action="@{/gameDetails/addDetail}" th:object="${gameDetails}" method="POST">
+                <div class="form-floating mb-3">
+                  <select class="form-select mb-3" aria-label="Default select" id="gamePlatformId" name="gamePlatformId">
+                    <option th:each="platform : ${platforms}" th:value="${platform.id}" th:text="${platform.name}"></option>
+                  </select>
+                  <label for="gamePlatformId">Платформа</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <select class="form-select mb-3" aria-label="Default select" id="gameStoreId" name="gameStoreId">
+                    <option th:each="store : ${stores}" th:value="${store.id}" th:text="${store.name}"></option>
+                  </select>
+                  <label for="gameStoreId">Магазин</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <input min="0" value="0" type="number" class="form-control" name="price" id="price" placeholder="Стоимость, руб">
+                  <label for="price">Стоимость, ₽</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">Добавить</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="link" href="javascript:addDetail(false)">Отмена</a></span>
+                <input type="hidden" th:field="${game.gameId}"/>
+              </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

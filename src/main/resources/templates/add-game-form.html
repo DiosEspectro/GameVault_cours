@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head th:replace="fragments/head::headfragment"></head>
+<body>
+<nav th:replace="fragments/navbar::navbarfragment"></nav>
+<div class="container py-3">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-lg">
+                <div class="card-header">
+                    <h2 class="text-center">[(${pageTitle})]</h2>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/saveGame}" th:object="${game}" method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="gameName" id="gameName" placeholder="Название игры" th:field="*{gameName}">
+                            <label for="gameName">Название игры</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select mb-3" aria-label="Default select" id="gameYear" name="gameYear" th:field="*{gameYear}">
+                                <option th:each="i : ${#numbers.sequence( curyear, 1950, -1)}" th:value="${i}" th:text="${i}"></option>
+                            </select>
+                            <label for="gameYear">Год выпуска</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="gameDeveloper" id="gameDeveloper" placeholder="Разработчик" th:field="*{gameDeveloper}">
+                            <label for="gameDeveloper">Разработчик</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <select class="form-select mb-3" aria-label="Default select" id="gameGenreId" name="gameGenreId">
+                                <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}" th:selected="${genre.id}==${gameGenre}"></option>
+                            </select>
+                            <label for="gameGenreId">Жанр игры</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">Сохранить</button>
+                        <input type="hidden" th:field="*{gameId}"/>
+                        <input type="hidden" th:field="*{createdBy}"/>
+                        <input type="hidden" name="details" th:value="${details}"/>
+                    </form>
+                    <hr/>
+                    <a class="link" th:href="@{/games}">Вернуться к списку</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

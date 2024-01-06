@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head th:replace="fragments/head::headfragment"></head>
+<body>
+<nav th:replace="fragments/navbar::navbarfragment"></nav>
+<div class="container py-3">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <div class="card shadow-lg">
+        <div class="card-header">
+          <h2 class="text-left">Статистика</h2>
+          <form th:action="@{/statistic/calculate}" method="POST">
+            <div class="form-floating my-3">
+              <select class="form-select mb-3" aria-label="Default select" id="statOption" name="statOption">
+                <option value="general" selected>Общая статистика</option>
+                <option value="platforms">Статистика по платформам</option>
+                <option value="stores">Статистика по магазинам</option>
+                <option value="genres">Статистика по жанрам</option>
+              </select>
+              <label for="statOption">Категория статистики</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Отобразить</button>
+          </form>
+        </div>
+        <div th:if="${statistic == null}" class="card-body">
+          Выберите категорию требуемой информации
+        </div>
+        <div class="card-body" th:if="${statistic != null}" th:utext="${statistic}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

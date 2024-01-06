@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head th:replace="fragments/head::headfragment"></head>
+<body>
+    <nav th:replace="fragments/navbar::navbarfragment"></nav>
+<br/><br/>
+<div class="container">
+    <div class="row gy-5">
+        <div class="col">
+            <div class="p-3">
+                <img th:src="@{/img/logo.png}" style="width: 100%;"/>
+            </div>
+        </div>
+        <div class="col">
+            <div class="p-3 border bg-light shadow-lg">
+                <div class="jumbotron">
+                    <h1 class="display-3">Добро пожаловать в GameVault!</h1>
+                    <p class="lead">Мы рады приветствовать вас на нашем сайте, который предназначен для всех любителей
+                        видеоигр и коллекционеров. GameVault - это уникальное хранилище, где вы можете хранить и
+                        организовывать вашу коллекцию видеоигр в одном месте.</p>
+                    <p sec:authorize="isAnonymous()">
+                        <a class="btn btn-primary btn-lg" href="/login" role="button">Войти</a>
+                        или <a class="link" th:href="@{/register}">Зарегистрироваться</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

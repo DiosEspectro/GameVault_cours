@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+<head th:replace="fragments/head::headfragment"></head>
+<body>
+    <nav th:replace="fragments/navbar::navbarfragment"></nav>
+<div class="container py-3">
+    <div class="row col-md-10">
+        <h2>Список игр</h2>
+    </div>
+    <div sec:authorize="!hasAuthority('READONLY')" class="mt-3">
+        <a th:href="@{/addGameForm}" class="btn btn-primary"><i class="bi bi-plus-lg text-light"></i>&nbsp;Добавить игру</a>
+    </div>
+    <br>
+    <table class="table table-sm table-striped" id="gameTable">
+        <thead>
+        <tr>
+            <th>Название игры</th>
+            <th>Год</th>
+            <th>Разработчик</th>
+            <th>Жанр</th>
+            <th sec:authorize="hasAnyAuthority('READONLY', 'ADMIN')">Добавил</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="align-middle" th:each="game: ${games}">
+            <td th:text="${game.gameName}" />
+            <td th:text="${game.gameYear}" />
+            <td th:text="${game.gameDeveloper}" />
+            <td th:text="${game.genre}" />
+            <td sec:authorize="hasAnyAuthority('READONLY', 'ADMIN')" th:text="${users.findById(game.getCreatedBy()).get().getUsername()}"/>
+            <td style="padding-left: 50px;">
+                <a th:href="@{/gameDetails(gameId=${game.gameId})}" class="btn btn-primary btn-dark" title="Детали"><i class="bi bi-info-circle-fill text-light"></i>&nbsp;Детали</a>
+                <a sec:authorize="!hasAuthority('READONLY')" th:href="@{/updateGame(gameId=${game.gameId})}" class="btn btn-dark" title="Изменить запись"><i class="bi bi-pen text-light"></i></a>
+                <a sec:authorize="!hasAuthority('READONLY')" th:href="@{/deleteGame(gameId=${game.gameId})}" class="btn btn-secondary ml-2" title="Удалить запись"><i class="bi bi-x-lg text-light"></i></a>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(games)}">
+            <td class="text-center p-4" colspan="5">Пока не введено данных</td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+</body></html>
