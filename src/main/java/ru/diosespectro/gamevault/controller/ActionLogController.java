@@ -7,15 +7,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import ru.diosespectro.gamevault.dto.UserDto;
 import ru.diosespectro.gamevault.entity.ActionLog;
 import ru.diosespectro.gamevault.repository.ActionLogRepository;
-import ru.diosespectro.gamevault.repository.GameRepository;
-import ru.diosespectro.gamevault.repository.GenreRepository;
 import ru.diosespectro.gamevault.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,10 +25,11 @@ public class ActionLogController {
     private ActionLogRepository actionLogRepository;
     @GetMapping("/logs")
     public ModelAndView getAllLogs(HttpServletRequest request){
-        Pageable pageable = PageRequest.of(0, 50, Sort.by("timestamp").descending());
 
+        Pageable pageable = PageRequest.of(0, 50, Sort.by("timestamp").descending());
         Page<ActionLog> logsPage = actionLogRepository.findAll(pageable);
         List<ActionLog> logs = logsPage.toList();
+
         ModelAndView mav = new ModelAndView("list-logs");
         mav.addObject("logs", logs);
         mav.addObject("userrep", userRepository);
